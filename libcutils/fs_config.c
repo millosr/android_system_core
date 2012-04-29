@@ -140,6 +140,7 @@ static const struct fs_path_config android_files[] = {
     /* the following file is INTENTIONALLY set-uid, but it
      * is NOT included on user builds. */
     { 06755, AID_ROOT,      AID_ROOT,      0, "system/xbin/procmem" },
+    { 04750, AID_ROOT,      AID_RADIO,     0, "system/bin/pppd" },
 
     /* the following files have enhanced capabilities and ARE included in user builds. */
     { 00750, AID_ROOT,      AID_SHELL,     CAP_MASK_LONG(CAP_SETUID) | CAP_MASK_LONG(CAP_SETGID), "system/bin/run-as" },
