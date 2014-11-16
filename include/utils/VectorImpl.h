@@ -108,16 +108,16 @@ protected:
     
 #ifdef LEGACY_BLOB_COMPATIBLE
     // take care of FBC...
-    virtual void reservedVectorImpl1();
-    virtual void reservedVectorImpl2();
-    virtual void reservedVectorImpl3();
-    virtual void reservedVectorImpl4();
-    virtual void reservedVectorImpl5();
-    virtual void reservedVectorImpl6();
-    virtual void reservedVectorImpl7();
-    virtual void reservedVectorImpl8();
+    virtual void            reservedVectorImpl1();
+    virtual void            reservedVectorImpl2();
+    virtual void            reservedVectorImpl3();
+    virtual void            reservedVectorImpl4();
+    virtual void            reservedVectorImpl5();
+    virtual void            reservedVectorImpl6();
+    virtual void            reservedVectorImpl7();
+    virtual void            reservedVectorImpl8();
 #endif
-    
+
 private:
         void* _grow(size_t where, size_t amount);
         void  _shrink(size_t where, size_t amount);
@@ -170,16 +170,16 @@ protected:
 
 #ifdef LEGACY_BLOB_COMPATIBLE
     // take care of FBC...
-    virtual void reservedSortedVectorImpl1();
-    virtual void reservedSortedVectorImpl2();
-    virtual void reservedSortedVectorImpl3();
-    virtual void reservedSortedVectorImpl4();
-    virtual void reservedSortedVectorImpl5();
-    virtual void reservedSortedVectorImpl6();
-    virtual void reservedSortedVectorImpl7();
-    virtual void reservedSortedVectorImpl8();
+    virtual void            reservedSortedVectorImpl1();
+    virtual void            reservedSortedVectorImpl2();
+    virtual void            reservedSortedVectorImpl3();
+    virtual void            reservedSortedVectorImpl4();
+    virtual void            reservedSortedVectorImpl5();
+    virtual void            reservedSortedVectorImpl6();
+    virtual void            reservedSortedVectorImpl7();
+    virtual void            reservedSortedVectorImpl8();
 #endif
-    
+
 private:
             ssize_t         _indexOrderOf(const void* item, size_t* order = 0) const;
 

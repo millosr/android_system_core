@@ -261,15 +261,18 @@ int do_exec(int nargs, char **args)
     pid_t pid;
     int i, j;
     char *par[MAX_PARAMETERS];
+
     if (nargs > MAX_PARAMETERS)
         return -1;
     for(i = 0, j = 1; i < (nargs-1); i++, j++)
         par[i] = args[j];
     par[i] = (char*)0;
+
     pid = fork();
     if (!pid) {
         char tmp[32];
         int fd, sz;
+        
         get_property_workspace(&fd, &sz);
         sprintf(tmp, "%d,%d", dup(fd), sz);
         setenv("ANDROID_PROPERTY_WORKSPACE", tmp, 1);
@@ -277,6 +280,7 @@ int do_exec(int nargs, char **args)
         exit(0);
     } else {
         int status;
+        
         while (waitpid(pid, &status, 0) == -1 && errno == EINTR);
         if (WEXITSTATUS(status) != 0) {
             ERROR("exec: pid %1d exited with return code %d: %s", (int)pid, WEXITSTATUS(status), strerror(status));
