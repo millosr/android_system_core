@@ -142,6 +142,7 @@ typedef enum {
                                           /* An example of remote presentation is Wifi Display */
                                           /*  where a dongle attached to a TV can be used to   */
                                           /*  play the mix captured by this audio source.      */
+    AUDIO_SOURCE_FM_TUNER            = 9,
 #ifdef QCOM_HARDWARE
     AUDIO_SOURCE_FM_RX               = 10,
     AUDIO_SOURCE_FM_RX_A2DP          = 11,
