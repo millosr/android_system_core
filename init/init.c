@@ -1023,6 +1023,10 @@ int main(int argc, char **argv)
          * together in the initramdisk on / and then we'll
          * let the rc file figure out the rest.
          */
+
+#ifdef GNULINUX_SUPPORT
+    mkdir("/dev/socket", 0755);
+#else
     mkdir("/dev", 0755);
     mkdir("/proc", 0755);
     mkdir("/sys", 0755);
@@ -1033,6 +1037,7 @@ int main(int argc, char **argv)
     mount("devpts", "/dev/pts", "devpts", 0, NULL);
     mount("proc", "/proc", "proc", 0, NULL);
     mount("sysfs", "/sys", "sysfs", 0, NULL);
+#endif
 
         /* indicate that booting is in progress to background fw loaders, etc */
     close(open("/dev/.booting", O_WRONLY | O_CREAT, 0000));
@@ -1068,7 +1073,12 @@ int main(int argc, char **argv)
     restorecon("/dev/__properties__");
     restorecon_recursive("/sys");
 
+#ifdef GNULINUX_SUPPORT
+    /* TODO: charger mode should be supported directly inside GNU/Linux */
+    is_charger = 0;
+#else
     is_charger = !strcmp(bootmode, "charger");
+#endif
 
     INFO("property init\n");
     property_load_boot_defaults();
@@ -1078,7 +1088,11 @@ int main(int argc, char **argv)
 
     action_for_each_trigger("early-init", action_add_queue_tail);
 
+#ifdef GNULINUX_SUPPORT
+    /* coldboot is done into GNU/Linux so we don't need to wait for it */
+#else
     queue_builtin_action(wait_for_coldboot_done_action, "wait_for_coldboot_done");
+#endif
     queue_builtin_action(mix_hwrng_into_linux_rng_action, "mix_hwrng_into_linux_rng");
     queue_builtin_action(keychord_init_action, "keychord_init");
     queue_builtin_action(console_init_action, "console_init");

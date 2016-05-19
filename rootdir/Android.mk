@@ -7,7 +7,11 @@ ifneq ($(TARGET_PROVIDES_INIT_RC),true)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := init.rc
+ifeq ($(GNULINUX_SUPPORT),true)
+LOCAL_SRC_FILES := gnulinux-$(LOCAL_MODULE)
+else
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
+endif
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 
@@ -36,7 +40,13 @@ bcp_dep := $(intermediates)/$(bcp_md5).bcp.dep
 $(bcp_dep) :
 	$(hide) mkdir -p $(dir $@) && rm -rf $(dir $@)*.bcp.dep && touch $@
 
-$(LOCAL_BUILT_MODULE): $(LOCAL_PATH)/init.environ.rc.in $(bcp_dep)
+ifeq ($(GNULINUX_SUPPORT),true)
+LOCAL_INIT_FILE := gnulinux-init.environ.rc.in
+else
+LOCAL_INIT_FILE := init.environ.rc.in
+endif
+
+$(LOCAL_BUILT_MODULE): $(LOCAL_PATH)/$(LOCAL_INIT_FILE) $(bcp_dep)
 	@echo "Generate: $< -> $@"
 	@mkdir -p $(dir $@)
 	$(hide) sed -e 's?%BOOTCLASSPATH%?$(PRODUCT_BOOTCLASSPATH)?g' $< >$@

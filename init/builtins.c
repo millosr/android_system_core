@@ -507,6 +507,9 @@ int do_mount_all(int nargs, char **args)
         return -1;
     }
 
+#ifdef GNULINUX_SUPPORT
+    ret = FS_MGR_MNTALL_DEV_NOT_ENCRYPTED;
+#else
     /*
      * Call fs_mgr_mount_all() to mount all filesystems.  We fork(2) and
      * do the call in the child to provide protection to the main init
@@ -541,6 +544,7 @@ int do_mount_all(int nargs, char **args)
         /* fork failed, return an error */
         return -1;
     }
+#endif
 
     if (ret == FS_MGR_MNTALL_DEV_NEEDS_ENCRYPTION) {
         property_set("vold.decrypt", "trigger_encryption");
@@ -568,6 +572,10 @@ int do_mount_all(int nargs, char **args)
 
 int do_swapon_all(int nargs, char **args)
 {
+#ifdef GNULINUX_SUPPORT
+    return 0;
+#else
+
     struct fstab *fstab;
     int ret;
 
@@ -576,6 +584,7 @@ int do_swapon_all(int nargs, char **args)
     fs_mgr_free_fstab(fstab);
 
     return ret;
+#endif
 }
 
 int do_setcon(int nargs, char **args) {

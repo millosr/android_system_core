@@ -759,7 +759,11 @@ static void handle_generic_device_event(struct uevent *uevent)
      } else if(!strncmp(uevent->subsystem, "misc", 4) &&
                  !strncmp(name, "log_", 4)) {
          kernel_logger();
+#ifdef GNULINUX_SUPPORT
+         base = "/dev/alog/";
+#else
          base = "/dev/log/";
+#endif
          make_dir(base, 0755);
          name += 4;
      } else
