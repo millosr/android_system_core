@@ -136,6 +136,8 @@
 #define AID_CACHE 2001 /* cache access */
 #define AID_DIAG 2002  /* access to diagnostic resources */
 
+#define AID_IDD 2987   /* can read/write /dev/idd */
+
 /* The range 2900-2999 is reserved for OEM, and must never be
  * used here */
 #define AID_OEM_RESERVED_START 2900
@@ -152,6 +154,9 @@
 #define AID_NET_BW_ACCT 3007  /* change bandwidth statistics accounting */
 #define AID_READPROC 3009     /* Allow /proc read access */
 #define AID_WAKELOCK 3010     /* Allow system wakelock read/write access */
+
+#define AID_QCOM_ONCRPC 3011  /* can read/write /dev/oncrpc files */
+#define AID_QCOM_DIAG 3012    /* can read/write /dev/diag */
 
 /* The range 5000-5999 is also reserved for OEM, and must never be used here. */
 #define AID_OEM_RESERVED_2_START 5000
