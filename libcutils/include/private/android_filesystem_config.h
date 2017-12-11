@@ -146,8 +146,8 @@
 #define AID_WAKELOCK 3010     /* Allow system wakelock read/write access */
 #define AID_UHID 3011         /* Allow read/write to /dev/uhid node */
 
-#define AID_QCOM_ONCRPC 3011  /* can read/write /dev/oncrpc files */
-#define AID_QCOM_DIAG 3012    /* can read/write /dev/diag */
+#define AID_QCOM_ONCRPC 3012  /* can read/write /dev/oncrpc files */
+#define AID_QCOM_DIAG 3013    /* can read/write /dev/diag */
 
 /* The range 5000-5999 is also reserved for OEM, and must never be used here. */
 #define AID_OEM_RESERVED_2_START 5000
