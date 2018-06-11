@@ -365,76 +365,6 @@ static bool set_highest_available_option_value(std::string path, int min, int ma
     return true;
 }
 
-#define MMAP_RND_PATH "/proc/sys/vm/mmap_rnd_bits"
-#define MMAP_RND_COMPAT_PATH "/proc/sys/vm/mmap_rnd_compat_bits"
-
-/* __attribute__((unused)) due to lack of mips support: see mips block
- * in set_mmap_rnd_bits_action */
-static bool __attribute__((unused)) set_mmap_rnd_bits_min(int start, int min, bool compat) {
-    std::string path;
-    if (compat) {
-        path = MMAP_RND_COMPAT_PATH;
-    } else {
-        path = MMAP_RND_PATH;
-    }
-
-    return set_highest_available_option_value(path, min, start);
-}
-
-/*
- * Set /proc/sys/vm/mmap_rnd_bits and potentially
- * /proc/sys/vm/mmap_rnd_compat_bits to the maximum supported values.
- * Returns -1 if unable to set these to an acceptable value.
- *
- * To support this sysctl, the following upstream commits are needed:
- *
- * d07e22597d1d mm: mmap: add new /proc tunable for mmap_base ASLR
- * e0c25d958f78 arm: mm: support ARCH_MMAP_RND_BITS
- * 8f0d3aa9de57 arm64: mm: support ARCH_MMAP_RND_BITS
- * 9e08f57d684a x86: mm: support ARCH_MMAP_RND_BITS
- * ec9ee4acd97c drivers: char: random: add get_random_long()
- * 5ef11c35ce86 mm: ASLR: use get_random_long()
- */
-static int set_mmap_rnd_bits_action(const std::vector<std::string>& args)
-{
-    int ret = -1;
-
-    /* values are arch-dependent */
-#if defined(USER_MODE_LINUX)
-    /* uml does not support mmap_rnd_bits */
-    ret = 0;
-#elif defined(__aarch64__)
-    /* arm64 supports 18 - 33 bits depending on pagesize and VA_SIZE */
-    if (set_mmap_rnd_bits_min(33, 24, false)
-            && set_mmap_rnd_bits_min(16, 16, true)) {
-        ret = 0;
-    }
-#elif defined(__x86_64__)
-    /* x86_64 supports 28 - 32 bits */
-    if (set_mmap_rnd_bits_min(32, 32, false)
-            && set_mmap_rnd_bits_min(16, 16, true)) {
-        ret = 0;
-    }
-#elif defined(__arm__) || defined(__i386__)
-    /* check to see if we're running on 64-bit kernel */
-    bool h64 = !access(MMAP_RND_COMPAT_PATH, F_OK);
-    /* supported 32-bit architecture must have 16 bits set */
-    if (set_mmap_rnd_bits_min(16, 16, h64)) {
-        ret = 0;
-    }
-#elif defined(__mips__) || defined(__mips64__)
-    // TODO: add mips support b/27788820
-    ret = 0;
-#else
-    LOG(ERROR) << "Unknown architecture";
-#endif
-
-    if (ret == -1) {
-        LOG(ERROR) << "Unable to set adequate mmap entropy value!";
-        security_failure();
-    }
-    return ret;
-}
 
 #define KPTR_RESTRICT_PATH "/proc/sys/kernel/kptr_restrict"
 #define KPTR_RESTRICT_MINVALUE 2
@@ -1157,7 +1087,6 @@ int main(int argc, char** argv) {
     am.QueueBuiltinAction(wait_for_coldboot_done_action, "wait_for_coldboot_done");
     // ... so that we can start queuing up actions that require stuff from /dev.
     am.QueueBuiltinAction(mix_hwrng_into_linux_rng_action, "mix_hwrng_into_linux_rng");
-    am.QueueBuiltinAction(set_mmap_rnd_bits_action, "set_mmap_rnd_bits");
     am.QueueBuiltinAction(set_kptr_restrict_action, "set_kptr_restrict");
     am.QueueBuiltinAction(keychord_init_action, "keychord_init");
     am.QueueBuiltinAction(console_init_action, "console_init");
